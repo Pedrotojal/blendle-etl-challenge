@@ -1,1 +1,0 @@
-# blendle-etl-challenge
