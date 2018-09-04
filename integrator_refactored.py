@@ -48,15 +48,15 @@ def createDimSubscriptions(events):
 
 def createDimMedium(events):
 	try:
-		dim_subscriptions_cut = etl.cut(events, 'type')
-		dim_subscriptions_rename = etl.rename(dim_subscriptions_cut, {'type':'subscription_name'})
-		dim_subscriptions = etl.distinct(dim_subscriptions_rename)
+		dim_medium_cut = etl.cut(events, 'type')
+		dim_medium_rename = etl.rename(dim_medium_cut, {'utm_medium':'medium'})
+		dim_medium = etl.distinct(dim_medium_rename)
 		# Export as csv to load folder
-		etl.tocsv(dim_subscriptions, 'load/dim_subscriptions.csv')
+		etl.tocsv(dim_medium, 'load/dim_medium.csv')
 	except Exception as e:
 		print("Something went wrong. Error {0}".format(e))
 
-def createDimCampaignType():
+def createDimCampaignType(events):
 	try:
 		dim_campaigntype_cut = etl.cut(events, 'utm_campaign')
 		dim_campaigntype_rename = etl.rename(dim_campaigntype_cut, {'utm_campaign': 'campaign_type'})
@@ -142,12 +142,15 @@ def main():
 		print(events.look())
 	except Exception as e:
 		print("Something went wrong. Error: {0}".format(e))
-	createDimCustomers(users)
-	createDimSubscriptions(events)
-	createDimMedium(events)
-	createDimSource()
-	createFacts(events, users)
-
+	try:
+		createDimCustomers(users)
+		createDimSubscriptions(events)
+		createDimMedium(events)
+		createDimCampaignType(events)
+		createDimCampaign()
+		createFacts(events, users)
+	except Exception as e:
+		print("Something went wrong. Error: {0}".format(e))
 
 
 if __name__ == '__main__':
