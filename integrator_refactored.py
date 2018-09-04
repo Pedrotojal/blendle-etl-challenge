@@ -76,7 +76,7 @@ def createDimCampaign():
 		tbl_campaign = [['campaign_name', 'campaign_started', 'campaign_ended'], ['none', '2014-04-28T00:00:00', '2018-09-30T00:00:00']]
 		dim_campaign = etl.head(tbl_campaign, 1)
 		# Export as csv to load folder
-		etl.tocsv(dim_campaign, 'data/campaign.csv')
+		etl.tocsv(dim_campaign, 'load/campaign.csv')
 	except Exception as e:
 		print("Something went wrong. Error {0}".format(e))
 
