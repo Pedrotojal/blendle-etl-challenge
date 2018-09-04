@@ -17,7 +17,7 @@ def importUsers():
 
 def importEvents():
 	try:
-		filePath = Path('data/events.json')
+		filePath = Path('data/events2.json')
 		resolved = filePath.resolve()
 	except FileNotFoundError:
 		print("File [{0}] doesn't exist".format(filePath))
@@ -32,20 +32,18 @@ def createDimCustomers(users):
 	try:
 		dim_customers = etl.cut(users, 'user_id', 'email')
 		etl.tocsv(dim_customers, 'load/dim_customers.csv')
-#todo: test if file was created	
 	except Exception as e:
-	ÂÂ¶¶	print("Something went wrong. Error {0}".format(e))
+		print("Something went wrong. Error {0}".format(e))
 
-def createDimSubscriptions(events)
+def createDimSubscriptions(events):
 	try:
 		dim_subscriptions_cut = etl.cut(events, 'type')
 		dim_subscriptions_rename = etl.rename(dim_subscriptions_cut, {'type':'subscription_name'})
 		dim_subscriptions = etl.distinct(dim_subscriptions_rename)
 		# Export as csv to load folder
 		etl.tocsv(dim_subscriptions, 'load/dim_subscriptions.csv')
-#todo: test if file was created	
 	except Exception as e:
-	ÂÂ¶¶	print("Something went wrong. Error {0}".format(e))
+		print("Something went wrong. Error {0}".format(e))
 
 
 def createDimMedium(events):
@@ -112,7 +110,7 @@ def createFacts(events, users):
 		t2 = etl.split(t1, 'date', '-', ['year', 'month', 'day'])
 		stage_ready = etl.split(t2, 'time', ':', ['hour', 'minute', 'second'])
 
-		# Export as csv Ãto load folder
+		# Export as csv to load folder
 		etl.tocsv(stage_ready, 'load/facts.csv')
 
 	except Exception as e:
