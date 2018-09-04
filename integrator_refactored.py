@@ -56,12 +56,22 @@ def createDimMedium(events):
 	except Exception as e:
 		print("Something went wrong. Error {0}".format(e))
 
+def createDimCampaignType():
+	try:
+		dim_campaigntype_cut = etl.cut(events, 'utm_campaign')
+		dim_campaigntype_rename = etl.rename(dim_campaigntype_cut, {'utm_campaign': 'campaign_type'})
+		dim_campaigntype = etl.distinct(dim_campaigntype_rename)
+		#export as csv to load folder
+		etl.tocsv(dim_campaigntype, 'load/dim_campaigntype.csv')
+	except Exception as e:
+		print("Something went wrong. Error {0}".format(e))
+
 
 # Note: 
 #       Slowly changing dimension
 #       No data for now, meaning that until we have this defined we will fill everything with a "none"
 #       Let's define that this will be solved until the end of september, and the start date was on the 28 of April 2018
-def createDimSource():
+def createDimCampaign():
 	try:
 		tbl_campaign = [['campaign_name', 'campaign_started', 'campaign_ended'], ['none', '2014-04-28T00:00:00', '2018-09-30T00:00:00']]
 		dim_campaign = etl.head(tbl_campaign, 1)
@@ -132,7 +142,12 @@ def main():
 		print(events.look())
 	except Exception as e:
 		print("Something went wrong. Error: {0}".format(e))
-		
+	createDimCustomers(users)
+	createDimSubscriptions(events)
+	createDimMedium(events)
+	createDimSource()
+	createFacts(events, users)
+
 
 
 if __name__ == '__main__':
