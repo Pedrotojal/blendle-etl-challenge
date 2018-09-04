@@ -2,9 +2,11 @@
 import petl as etl
 from collections import OrderedDict
 
+
 # Load the files
 users = etl.fromcsv('data/users.csv')
 events = etl.fromjson('data/events2.json')
+
 
 # Transform
 # Dim Customers
