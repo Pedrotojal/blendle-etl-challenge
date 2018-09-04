@@ -94,7 +94,8 @@ def createFacts(events, users):
 		mappings['tid']='tracking_id'
 		mappings['uid']= 'user_id'
 		mappings['utm_medium']='utm_medium'
-		mappings['utm_campaign']='utm_campaign'
+		mappings['utm_campaign']='utm_campaign', {'audio':'none', 'social':'none'}
+		mappings['utm_campaigntype']='utm_campaign'
 		mappings['email']='email'
 		mappings['subscription']='type'
 		mappings['sub_order']='type', {'Signup Completed': '1', 'Trial Started':'2', 'Subscription Started':'3', 'Subscription Ended':'4'}

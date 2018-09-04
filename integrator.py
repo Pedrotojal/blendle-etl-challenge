@@ -28,22 +28,22 @@ etl.tocsv(dim_subscriptions, 'load/dim_subscriptions.csv')
 # Dim Medium
 # Use the distinct values present in the utm_medium colum to load into the dim medium table
 dim_medium_cut = etl.cut(events, 'utm_medium')
-dim_medium_rename = etl.rename(dim_medium_cut, {'utm_medium': 'medium_name'})
+dim_medium_rename = etl.rename(dim_medium_cut, {'utm_medium':'medium'})
 dim_medium = etl.distinct(dim_medium_rename)
-# Export as cvs to load folder
+# Export as csv to load folder
 etl.tocsv(dim_medium, 'load/dim_medium.csv')
 
 
-# Dim Source
+# Dim Campaign Type
 # Use the distinct values present in the utm_campaign column to load into the dim campaign table
 # Note: 
 #	If this is the only available data right now, this in the future will probably be the source and not campaign
 #	Another table, with the campaign name and start and end date will be connect with the facts table
-dim_source_cut = etl.cut(events, 'utm_campaign')
-dim_source_rename = etl.rename(dim_source_cut, {'utm_campaign': 'source_name'})
-dim_source = etl.distinct(dim_source_rename)
+dim_campaigntype_cut = etl.cut(events, 'utm_campaign')
+dim_campaigntype_rename = etl.rename(dim_campaigntype_cut, {'utm_campaign': 'campaign_type'})
+dim_campaigntype = etl.distinct(dim_campaigntype_rename)
 #export as csv to load folder
-etl.tocsv(dim_source, 'load/dim_source.csv')
+etl.tocsv(dim_campaigntype, 'load/dim_campaigntype.csv')
 
 
 # Dim Campaign 
@@ -54,7 +54,7 @@ etl.tocsv(dim_source, 'load/dim_source.csv')
 tbl_campaign = [['campaign_name', 'campaign_started', 'campaign_ended'], ['none', '2014-04-28T00:00:00', '2018-09-30T00:00:00']]
 dim_campaign = etl.head(tbl_campaign, 1)
 # Export as csv to load folder
-etl.tocsv(dim_campaign, 'data/campaign.csv')
+etl.tocsv(dim_campaign, 'load/dim_campaign.csv')
 
 
 
@@ -87,7 +87,8 @@ mappings = OrderedDict()
 mappings['tid']='tracking_id'
 mappings['uid']= 'user_id'
 mappings['utm_medium']='utm_medium'
-mappings['utm_campaign']='utm_campaign'
+mappings['utm_campaign']='utm_campaign', {'audio':'none', 'social':'none'}
+mappings['utm_campaign_type']='utm_campaign'
 mappings['email']='email'
 mappings['subscription']='type'
 mappings['sub_order']='type', {'Signup Completed': '1', 'Trial Started':'2', 'Subscription Started':'3', 'Subscription Ended':'4'}
