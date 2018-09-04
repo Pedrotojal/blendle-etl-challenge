@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import petl as etl
+from collections import OrderedDict
 
 # Load the files
 users = etl.fromcsv('data/users.csv')
@@ -69,4 +70,32 @@ etl.tocsv(dim_campaign, 'data/campaign.csv')
 # This facts table will be the staging with all the needed info to quickly update with the dimension keys and load to the facts table
 # The facts table will have columns to match each column on the dim Time table, to make it easier to get the reference key
 #
+
+events_uid = etl.cutout(events, 'tracking_id', 'utm_medium', 'utm_campaign')
+events_tui = etl.cutout(events, 'user_id')
+
+stage_uid = etl.join(users, events_uid, key='user_id')
+stage_tui = etl.join(users, events_tui, key='tracking_id')
+stage_utm = etl.cut(stage_tui, 'user_id', 'utm_medium', 'utm_campaign')
+stage_uid_utm = etl.join(stage_uid, stage_utm, key='user_id')
+stage_m_s = etl.mergesort(stage_uid_utm, stage_tui, key=['created_at', 'email'])
+
+# Mapping definitions
+mappings = OrderedDict()
+mappings['tid']='tracking_id'
+mappings['uid']= 'user_id'
+mappings['utm_medium']='utm_medium'
+mappings['utm_campaign']='utm_campaign'
+mappings['email']='email'
+mappings['subscription']='type'
+mappings['sub_order']='type', {'Signup Completed': '1', 'Trial Started':'2', 'Subscription Started':'3', 'Subscription Ended':'4'}
+mappings['created_at']='created_at'
+
+# Mapping
+stage_mapping = etl.fieldmap(stage_m_s, mappings)
+
+# Sort
+stage_mapping_ordered = etl.sort(stage_mapping, key=['created_at', 'email', 'sub_order'])
+
+# Datetime split
 
