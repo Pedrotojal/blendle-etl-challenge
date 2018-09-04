@@ -98,4 +98,9 @@ stage_mapping = etl.fieldmap(stage_m_s, mappings)
 stage_mapping_ordered = etl.sort(stage_mapping, key=['created_at', 'email', 'sub_order'])
 
 # Datetime split
+t1 = etl.split(stage_mapping_ordered, 'created_at', 'T', ['date', 'time'], include_original=True)
+t2 = etl.split(t1, 'date', '-', ['year', 'month', 'day'])
+stage_ready = etl.split(t2, 'time', ':', ['hour', 'minute', 'second'])
 
+# Export as csv to load folder
+etl.tocsv(stage_ready, 'load/facts.csv')
