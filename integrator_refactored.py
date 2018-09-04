@@ -48,7 +48,7 @@ def createDimSubscriptions(events):
 
 def createDimMedium(events):
 	try:
-		dim_medium_cut = etl.cut(events, 'type')
+		dim_medium_cut = etl.cut(events, 'utm_medium')
 		dim_medium_rename = etl.rename(dim_medium_cut, {'utm_medium':'medium'})
 		dim_medium = etl.distinct(dim_medium_rename)
 		# Export as csv to load folder
