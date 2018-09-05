@@ -61,6 +61,15 @@ sed '1s/^/[/;$!s/$/,/;$s/$/]/' events.json > events2.json
 - As we can see, files are consumed, not tagged, not moved to a processed file;
 - Decision was to get this working, didn't focus on this;
 
+4.1.6. Missing, duplicates, dirty data
+- This code is not handling any of this;
+- When the events and users are joined an anti join should also be made and the results stored for another type of matching;
+- This needs a data strategy implemented:
+	- dirty data clean up
+	- is the user already loaded, if not load, if loaded match 
+	- are we getting all the users related to each event, or can a event come without the user, or vice versa
+- Some questions must be raised in terms of data strategy to define how to handle it.
+
 
 
 
