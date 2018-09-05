@@ -135,19 +135,13 @@ def createFacts(events, users):
 def main():
     '''main function
     '''
-    users = importUsers()
-    # test
     try:
+        users = importUsers()
         print(users.look())
-    except Exception as e:
-        print("Something went wrong. Error: {0}".format(e))
-    events = importEvents()
-    # test
-    try:
+
+        events = importEvents()
         print(events.look())
-    except Exception as e:
-        print("Something went wrong. Error: {0}".format(e))
-    try:
+
         createDimCustomers(users)
         createDimSubscriptions(events)
         createDimMedium(events)
