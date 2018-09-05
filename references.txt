@@ -3,3 +3,5 @@ Sources used for this project
 
 ## Time dimension
 https://medium.com/@duffn/creating-a-date-dimension-table-in-postgresql-af3f8e2941ac
+http://elliot.land/post/building-a-date-dimension-table-in-redshift
+
